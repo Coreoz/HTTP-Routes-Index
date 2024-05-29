@@ -1,6 +1,5 @@
 package com.coreoz.http.routes.routes;
 
-import com.coreoz.http.routes.data.ParsedSegment;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -11,6 +10,5 @@ import java.util.List;
  * @param genericPath The path where path pattern names have been removed. E.g. <code>/path/{}/other-path-segment</code>
  * @param originalPath The base path. E.g. <code>/path/{path-arg}/other-path-segment</code>
  */
-public record ParsedPath(@NotNull List<ParsedSegment> segments, @NotNull String genericPath,
-                         @NotNull String originalPath) {
+public record ParsedPath(@NotNull List<ParsedSegment> segments, @NotNull String genericPath, @NotNull String originalPath) {
 }

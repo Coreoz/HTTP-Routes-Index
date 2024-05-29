@@ -43,7 +43,7 @@ public class HttpRoutesValidator<T> {
      * @return The routes matching the path
      */
     public @Nullable ParsedRoute<T> findRoute(@NotNull String path, @NotNull String httpMethod) {
-        return findEndpoint(findRoutes(path), httpMethod).orElse(null);
+        return findRoute(findRoutes(path), httpMethod).orElse(null);
     }
 
     /**
@@ -83,22 +83,22 @@ public class HttpRoutesValidator<T> {
      * so the route passed as parameter is not added
      */
     public @Nullable ParsedRoute<T> addRoute(@NotNull ParsedRoute<T> route) {
-        List<ParsedRoute<T>> availableEndpoints = existingRoutes.get(route.parsedPath().genericPath());
-        if (availableEndpoints == null) {
-            List<ParsedRoute<T>> endpoints = new ArrayList<>();
-            endpoints.add(route);
-            existingRoutes.put(route.parsedPath().genericPath(), endpoints);
+        List<ParsedRoute<T>> availableRoutes = existingRoutes.get(route.parsedPath().genericPath());
+        if (availableRoutes == null) {
+            List<ParsedRoute<T>> routes = new ArrayList<>();
+            routes.add(route);
+            existingRoutes.put(route.parsedPath().genericPath(), routes);
             return route;
         }
-        if (findEndpoint(availableEndpoints, route.httpMethod()).isPresent()) {
+        if (findRoute(availableRoutes, route.httpMethod()).isPresent()) {
             return null;
         }
-        availableEndpoints.add(route);
+        availableRoutes.add(route);
         return route;
     }
 
-    private @NotNull Optional<ParsedRoute<T>> findEndpoint(@NotNull List<ParsedRoute<T>> availableEndpoints, @NotNull String httpMethod) {
-        return availableEndpoints.stream().filter(endpoint -> endpoint.httpMethod().equals(httpMethod)).findFirst();
+    private @NotNull Optional<ParsedRoute<T>> findRoute(@NotNull List<ParsedRoute<T>> availableRoutes, @NotNull String httpMethod) {
+        return availableRoutes.stream().filter(route -> route.httpMethod().equals(httpMethod)).findFirst();
     }
 
     /**

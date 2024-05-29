@@ -10,6 +10,5 @@ import org.jetbrains.annotations.Nullable;
  * @param attachedData Some data that can be added to the route to ease later usage
  * @param <T> The type of {@link #attachedData}
  */
-public record ParsedRoute<T>(@NotNull ParsedPath parsedPath, @NotNull String httpMethod,
-                             @Nullable T attachedData) {
+public record ParsedRoute<T>(@NotNull ParsedPath parsedPath, @NotNull String httpMethod, @Nullable T attachedData) {
 }

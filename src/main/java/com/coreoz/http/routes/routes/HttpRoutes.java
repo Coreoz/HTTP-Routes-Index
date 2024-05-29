@@ -1,6 +1,5 @@
 package com.coreoz.http.routes.routes;
 
-import com.coreoz.http.routes.data.ParsedSegment;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -47,7 +46,7 @@ public class HttpRoutes {
     /**
      * Make a {@link String} for a {@link ParsedPath}.
      * @param parsedPath The parsed path to serialize
-     * @param segmentPatternNameMaker The function to serialize segment patterns. See {@link SegmentPatternNameMaker}.
+     * @param segmentPatternNameMaker The function to serialize segment routePatternIndexes. See {@link SegmentPatternNameMaker}.
      * @return The string representation of the parsedPath
      */
     public static @NotNull String serializeParsedPath(@NotNull ParsedPath parsedPath, @NotNull SegmentPatternNameMaker segmentPatternNameMaker) {
@@ -65,7 +64,7 @@ public class HttpRoutes {
      * - ["test"] => "/test"
      * - ["test", "arg" (isPattern), "other" => "/test/" + segmentPatternNameMaker("arg") + "/other"
      * @param parsedPathSegments The path segments to serialize
-     * @param segmentPatternNameMaker The function to serialize segment patterns. See {@link SegmentPatternNameMaker}.
+     * @param segmentPatternNameMaker The function to serialize segment routePatternIndexes. See {@link SegmentPatternNameMaker}.
      * @return The string representation of the parsedPath
      */
     public static @NotNull String serializeParsedPath(
@@ -87,25 +86,24 @@ public class HttpRoutes {
     }
 
     /**
-     * Parse the segments of an endpoint path. For instance <code>/users/{id}/addresses</code> will give:
+     * Parse the segments of a route path. For instance <code>/users/{id}/addresses</code> will give:
      * <pre>
      * - users (pattern = false)
      * - id (pattern = true)
      * - addresses (pattern = false)
      * </pre>
-     * <br>
-     * A path should start with "/", else the first letter will be interpreted as a "/": hence it will be skipped.<br>
+     * <strong>The path must start with "/"</strong>, else the first letter will be interpreted as a "/": hence it will be skipped.<br>
      * <br>
      * All path are accepted and will not be adapted, some examples of how strange paths will be parsed:<br>
-     * - [empty path string] => []<br>
-     * - / => []<br>
-     * - a => []<br>
-     * - abcd => ["bcd"]<br>
-     * - /test//other => ["test", "", "other"]<br>
-     * - /test/{}/other => ["test", "" (isPattern), "other"]<br>
-     * - /test/{unclosed-pattern/other => ["test", "{unclosed-pattern", "other"]<br>
-     * - /test/unclosed-pattern}/other => ["test", "unclosed-pattern}", "other"]<br>
-     * - /test/unclosed{middle}-pattern/other => ["test", "unclosed{middle}-pattern", "other"]<br>
+     * - <code>&lt;empty path string&gt;</code> => <code>[]</code><br>
+     * - <code>/</code> => <code>[]</code><br>
+     * - <code>a</code> => <code>[]</code><br>
+     * - <code>abcd</code> => <code>["bcd"]</code><br>
+     * - <code>/test//other</code> => <code>["test", "", "other"]</code><br>
+     * - <code>/test/{}/other</code> => <code>["test", "" (isPattern), "other"]</code><br>
+     * - <code>/test/{unclosed-pattern/other</code> => <code>["test", "{unclosed-pattern", "other"]</code><br>
+     * - <code>/test/unclosed-pattern}/other</code> => <code>["test", "unclosed-pattern}", "other"]</code><br>
+     * - <code>/test/unclosed{middle}-pattern/other</code> => <code>["test", "unclosed{middle}-pattern", "other"]</code><br>
      * <br>
      * See unit tests in HttpRoutesTest for details.
      */
@@ -115,7 +113,7 @@ public class HttpRoutes {
         }
         return Arrays.stream(
             path
-                // the first slash needs to be removed, else for the endpoint /a/b split("/") would return ['', 'a', 'b']
+                // the first slash needs to be removed, else for the route /a/b split("/") would return ['', 'a', 'b']
                 .substring(1)
                 .split(SEGMENT_SEPARATOR)
             )
