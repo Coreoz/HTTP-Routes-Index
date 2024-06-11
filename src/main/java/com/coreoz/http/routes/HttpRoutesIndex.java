@@ -1,5 +1,7 @@
-package com.coreoz.http.routes.routes;
+package com.coreoz.http.routes;
 
+import com.coreoz.http.routes.parsing.ParsedPath;
+import com.coreoz.http.routes.parsing.ParsedRoute;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,10 +14,11 @@ import java.util.function.Function;
 import java.util.stream.Collector;
 
 /**
- * Helper class to validate and parse routes. A typical use case is to verify that a new route is not already defined.
+ * Route definitions index to verify whether another route definition is present or not in the Index.<br>
+ * This is usually used for validation purpose to verify that a route has not already been declared.
  * @param <T> If needed, the type of data that is being attached to a route
  */
-public class HttpRoutesValidator<T> {
+public class HttpRoutesIndex<T> {
     private final Map<String, List<ParsedRoute<T>>> existingRoutes = new HashMap<>();
 
     /**
@@ -40,7 +43,7 @@ public class HttpRoutesValidator<T> {
     /**
      * Find the route matching the path and the HTTP method passed as parameter
      * @param path The path to search route
-     * @return The routes matching the path
+     * @return The routes matching the path, or null if none are found
      */
     public @Nullable ParsedRoute<T> findRoute(@NotNull String path, @NotNull String httpMethod) {
         return findRoute(findRoutes(path), httpMethod).orElse(null);
@@ -102,31 +105,19 @@ public class HttpRoutesValidator<T> {
     }
 
     /**
-     * Creates a {@link Collector} to use on a {@link java.util.stream.Stream} to reduce a Stream to a {@link HttpRoutesValidator}
-     * @param routeExtractor The function that transforms a Stream element to {@link ParsedRoute}. The function {@link HttpRoutes#parseRoute(String, String, Object)} should generally be used to that.
-     * @return The corresponding {@link HttpRoutesValidator}
-     * @param <E> The type of the {@link java.util.stream.Stream} elements
-     * @param <T> The type of the resulted {@link HttpRoutesValidator}
+     * Creates a {@link Collector} to use on a {@link java.util.stream.Stream} of {@link ParsedRoute} to reduce a Stream to a {@link HttpRoutesIndex}
+     * @return The corresponding {@link HttpRoutesIndex}
+     * @param <T> The type of the resulted {@link HttpRoutesIndex}
      */
-    public static <E, T> Collector<E, HttpRoutesValidator<T>, HttpRoutesValidator<T>> collector(@NotNull RouteExtractor<E, T> routeExtractor) {
+    public static <T> Collector<ParsedRoute<T>, HttpRoutesIndex<T>, HttpRoutesIndex<T>> collector() {
         return Collector.of(
-            HttpRoutesValidator::new,
-            (routesValidator, element) -> routesValidator.addRoute(routeExtractor.extractRoute(element)),
+            HttpRoutesIndex::new,
+            HttpRoutesIndex::addRoute,
             (a, b) -> {
                 throw new RuntimeException("Parallel stream collection is not supported");
             },
             Function.identity(),
             Collector.Characteristics.UNORDERED, Collector.Characteristics.IDENTITY_FINISH
         );
-    }
-
-    /**
-     * Transform a {@link java.util.stream.Stream} element to a {@link ParsedRoute} element
-     * @param <E> The type of the Stream elements
-     * @param <T> The type parameter of {@link ParsedRoute}
-     */
-    @FunctionalInterface
-    public interface RouteExtractor<E, T> {
-        @NotNull ParsedRoute<T> extractRoute(E streamElement);
     }
 }

@@ -1,4 +1,6 @@
-package com.coreoz.http.routes.data;
+package com.coreoz.http.routes.router.search;
+
+import com.coreoz.http.routes.router.index.IndexedRoutes;
 
 import java.util.ArrayDeque;
 import java.util.Map;

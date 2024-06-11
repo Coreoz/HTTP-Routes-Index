@@ -1,12 +1,7 @@
-package com.coreoz.http.routes;
+package com.coreoz.http.routes.router.search;
 
-import com.coreoz.http.routes.data.DestinationRoute;
-import com.coreoz.http.routes.data.IndexRouteLeaf;
-import com.coreoz.http.routes.data.IndexedRoutes;
-import com.coreoz.http.routes.data.MatchingRoute;
-import com.coreoz.http.routes.data.SearchSegment;
-import com.coreoz.http.routes.routes.HttpRoutes;
-import com.coreoz.http.routes.routes.ParsedSegment;
+import com.coreoz.http.routes.router.index.IndexedRoutes;
+import com.coreoz.http.routes.HttpRoutes;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayDeque;
@@ -33,7 +28,7 @@ public class SearchRouteEngine {
      * @param requestPath The path to search (that must start with a slash: "/")
      * @return The optional route that has been found
      */
-    public static <T> @NotNull Optional<MatchingRoute<T>> searchRoute(@NotNull IndexedRoutes<T> routesIndex, @NotNull String requestPath) {
+    public static <T> @NotNull Optional<RawMatchingRoute<T>> searchRoute(@NotNull IndexedRoutes<T> routesIndex, @NotNull String requestPath) {
         ArrayDeque<String> requestElements = new ArrayDeque<>(Arrays.asList(requestPath.substring(1).split(HttpRoutes.SEGMENT_SEPARATOR)));
         List<SearchSegment<T>> segmentOptions = new ArrayList<>();
         segmentOptions.add(new SearchSegment<>(
@@ -48,7 +43,7 @@ public class SearchRouteEngine {
 
             if (currentRouteOption.requestRemainingSegments().isEmpty() && indexedRoutes.getLastRoute() != null) {
                 return Optional.of(
-                    new MatchingRoute<>(
+                    new RawMatchingRoute<>(
                         indexedRoutes.getLastRoute(),
                         currentRouteOption.params()
                     )
@@ -56,12 +51,12 @@ public class SearchRouteEngine {
             }
 
             if (!currentRouteOption.requestRemainingSegments().isEmpty()) {
-                String currentRequest = currentRouteOption.requestRemainingSegments().remove();
-                if (indexedRoutes.getSegments().get(currentRequest) != null) {
-                    segmentOptions.add(toSearchSegment(indexedRoutes.getSegments().get(currentRequest), currentRouteOption));
+                String currentPathSegment = currentRouteOption.requestRemainingSegments().remove();
+                if (indexedRoutes.getSegments().get(currentPathSegment) != null) {
+                    segmentOptions.add(toSearchSegment(indexedRoutes.getSegments().get(currentPathSegment), currentRouteOption));
                 }
                 if (indexedRoutes.getPattern() != null) {
-                    currentRouteOption.params().put(currentRouteOption.indexedRoutes().getDepth() + 1, currentRequest);
+                    currentRouteOption.params().put(currentRouteOption.indexedRoutes().getDepth() + 1, currentPathSegment);
                     segmentOptions.add(toSearchSegment(indexedRoutes.getPattern(), currentRouteOption));
                 }
                 segmentOptions
@@ -78,18 +73,6 @@ public class SearchRouteEngine {
             indexedRoutes,
             currentSegmentOption.requestRemainingSegments().clone(),
             currentSegmentOption.params()
-        );
-    }
-
-    public static @NotNull DestinationRoute computeDestinationRoute(@NotNull MatchingRoute<?> matchingRoute, @NotNull List<ParsedSegment> destinationPathSegments) {
-        IndexRouteLeaf<?> matchingRouteLeaf = matchingRoute.matchingRouteLeaf();
-        @NotNull String serializedParsedPath = HttpRoutes.serializeParsedPath(
-            destinationPathSegments,
-            currentSegmentName -> matchingRoute.params().get(matchingRouteLeaf.routePatternIndexes().get(currentSegmentName))
-        );
-        return new DestinationRoute(
-            matchingRouteLeaf.httpRoute().routeId(),
-            serializedParsedPath
         );
     }
 }

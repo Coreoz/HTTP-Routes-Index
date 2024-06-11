@@ -1,4 +1,4 @@
-package com.coreoz.http.routes.routes;
+package com.coreoz.http.routes.parsing;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

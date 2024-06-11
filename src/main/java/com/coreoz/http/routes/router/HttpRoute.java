@@ -1,4 +1,4 @@
-package com.coreoz.http.routes.data;
+package com.coreoz.http.routes.router;
 
 /**
  * An HTTP route that can be indexed in the router

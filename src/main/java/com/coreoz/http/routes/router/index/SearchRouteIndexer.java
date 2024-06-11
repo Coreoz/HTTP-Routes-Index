@@ -1,10 +1,9 @@
-package com.coreoz.http.routes;
+package com.coreoz.http.routes.router.index;
 
-import com.coreoz.http.routes.data.IndexRouteLeaf;
-import com.coreoz.http.routes.data.HttpRoute;
-import com.coreoz.http.routes.data.IndexedRoutes;
-import com.coreoz.http.routes.routes.ParsedSegment;
-import com.coreoz.http.routes.routes.HttpRoutes;
+import com.coreoz.http.routes.router.HttpRoute;
+import com.coreoz.http.routes.router.search.SearchRouteEngine;
+import com.coreoz.http.routes.parsing.ParsedSegment;
+import com.coreoz.http.routes.HttpRoutes;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
