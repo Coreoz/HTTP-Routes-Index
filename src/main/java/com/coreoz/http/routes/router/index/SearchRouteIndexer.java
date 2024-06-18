@@ -1,9 +1,9 @@
 package com.coreoz.http.routes.router.index;
 
+import com.coreoz.http.routes.HttpRoutes;
+import com.coreoz.http.routes.parsing.ParsedSegment;
 import com.coreoz.http.routes.router.HttpRoute;
 import com.coreoz.http.routes.router.search.SearchRouteEngine;
-import com.coreoz.http.routes.parsing.ParsedSegment;
-import com.coreoz.http.routes.HttpRoutes;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -50,10 +50,11 @@ public class SearchRouteIndexer {
                 currentIndex = computeSegmentIndex(currentIndex, parsedSegmentToAdd.name(), segmentIndex);
             }
 
-            // condition finale d'arrêt
+            // final stop condition
             if (segmentIndex == pathSegments.size()) {
                 if (currentIndex.getLastRoute() != null) {
-                    // cas possible /test/{bidule}/truc et /test/{machin}/truc
+                    // When a route already exists, e.g.
+                    // /test/{bidule}/truc and /test/{machin}/truc
                     // There is already an existing route for the current route
                     // => The new route is not added and the existing route is returned
                     return currentIndex.getLastRoute();
