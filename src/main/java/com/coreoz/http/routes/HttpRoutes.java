@@ -4,6 +4,7 @@ import com.coreoz.http.routes.parsing.DestinationRoute;
 import com.coreoz.http.routes.parsing.ParsedPath;
 import com.coreoz.http.routes.parsing.ParsedRoute;
 import com.coreoz.http.routes.parsing.ParsedSegment;
+import com.coreoz.http.routes.router.HttpRoute;
 import com.coreoz.http.routes.router.index.IndexRouteLeaf;
 import com.coreoz.http.routes.router.search.MatchingRoute;
 import com.coreoz.http.routes.router.search.RawMatchingRoute;
@@ -144,9 +145,9 @@ public class HttpRoutes {
      * in the {@link RawMatchingRoute} should be used instead.
      * @param rawMatchingRoute The matching route to transform
      * @return The corresponding {@link MatchingRoute}
-     * @param <T> The type of the {@link HttpRouter} stored in the router index
+     * @param <T> The type of the {@link HttpRoute} stored in the router index
      */
-    public static @NotNull <T> MatchingRoute<T> toMatchingRoute(@NotNull RawMatchingRoute<T> rawMatchingRoute) {
+    public static <T extends HttpRoute> @NotNull MatchingRoute<T> toMatchingRoute(@NotNull RawMatchingRoute<T> rawMatchingRoute) {
         return new MatchingRoute<>(
             rawMatchingRoute.matchingRouteLeaf().httpRoute(),
             rawMatchingRoute

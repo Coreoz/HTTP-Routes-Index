@@ -28,7 +28,7 @@ public class SearchRouteIndexer {
      * <br>
      * Returns the new route added to the tree or the existing route that is already present in the tree.
      */
-    public static <T> @NotNull IndexRouteLeaf<T> addRouteToIndex(@NotNull Map<String, IndexedRoutes<T>> indexedRoutes, @NotNull HttpRoute<T> route) {
+    public static <T extends HttpRoute> @NotNull IndexRouteLeaf<T> addRouteToIndex(@NotNull Map<String, IndexedRoutes<T>> indexedRoutes, @NotNull T route) {
         IndexedRoutes<T> rootIndex = indexedRoutes.computeIfAbsent(route.method(), method -> new IndexedRoutes<>(
             null,
             1L << MAX_LONG_OFFSET_FOR_POSITIVE_NUMBERS,
@@ -71,7 +71,7 @@ public class SearchRouteIndexer {
         throw new RuntimeException("The route " + route + " could not be added, this is a bug");
     }
 
-    private static <T> @NotNull IndexedRoutes<T> computeSegmentIndex(@NotNull IndexedRoutes<T> currentIndex, @NotNull String segmentName, int segmentIndex) {
+    private static <T extends HttpRoute> @NotNull IndexedRoutes<T> computeSegmentIndex(@NotNull IndexedRoutes<T> currentIndex, @NotNull String segmentName, int segmentIndex) {
         return currentIndex.getSegments().computeIfAbsent(segmentName, segmentNameToAdd -> new IndexedRoutes<>(
             null,
             currentIndex.getRating() | 1L << (MAX_LONG_OFFSET_FOR_POSITIVE_NUMBERS - segmentIndex),
@@ -81,7 +81,7 @@ public class SearchRouteIndexer {
         ));
     }
 
-    private static <T> @NotNull IndexedRoutes<T> computePatternIndex(
+    private static <T extends HttpRoute> @NotNull IndexedRoutes<T> computePatternIndex(
         @NotNull IndexedRoutes<T> currentIndex, @NotNull String segmentName, int segmentIndex, @NotNull Map<String, Integer> patterns
     ) {
         patterns.put(segmentName, segmentIndex);
@@ -102,11 +102,11 @@ public class SearchRouteIndexer {
     /**
      * Main indexation method
      */
-    public static <T> @NotNull Map<String, IndexedRoutes<T>> indexRoutes(@NotNull Iterable<HttpRoute<T>> routes) {
+    public static <T extends HttpRoute> @NotNull Map<String, IndexedRoutes<T>> indexRoutes(@NotNull Iterable<T> routes) {
         // 1. Build the route index
         Map<String, IndexedRoutes<T>> routesIndex = new HashMap<>();
         // 2. Loop over all routes to add them in the index
-        for (HttpRoute<T> route : routes) {
+        for (T route : routes) {
             addRouteToIndex(routesIndex, route);
         }
         // 3. Returns the route index

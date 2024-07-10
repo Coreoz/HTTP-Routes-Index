@@ -1,5 +1,6 @@
 package com.coreoz.http.routes.router.search;
 
+import com.coreoz.http.routes.router.HttpRoute;
 import com.coreoz.http.routes.router.index.IndexedRoutes;
 import com.coreoz.http.routes.HttpRoutes;
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +29,7 @@ public class SearchRouteEngine {
      * @param requestPath The path to search (that must start with a slash: "/")
      * @return The optional route that has been found
      */
-    public static <T> @NotNull Optional<RawMatchingRoute<T>> searchRoute(@NotNull IndexedRoutes<T> routesIndex, @NotNull String requestPath) {
+    public static <T extends HttpRoute> @NotNull Optional<RawMatchingRoute<T>> searchRoute(@NotNull IndexedRoutes<T> routesIndex, @NotNull String requestPath) {
         ArrayDeque<String> requestElements = new ArrayDeque<>(Arrays.asList(requestPath.substring(1).split(HttpRoutes.SEGMENT_SEPARATOR)));
         List<SearchSegment<T>> segmentOptions = new ArrayList<>();
         segmentOptions.add(new SearchSegment<>(
@@ -68,7 +69,7 @@ public class SearchRouteEngine {
         return Optional.empty();
     }
 
-    private static <T> @NotNull SearchSegment<T> toSearchSegment(@NotNull IndexedRoutes<T> indexedRoutes, @NotNull SearchSegment<T> currentSegmentOption) {
+    private static <T extends HttpRoute> @NotNull SearchSegment<T> toSearchSegment(@NotNull IndexedRoutes<T> indexedRoutes, @NotNull SearchSegment<T> currentSegmentOption) {
         return new SearchSegment<>(
             indexedRoutes,
             currentSegmentOption.requestRemainingSegments().clone(),

@@ -13,5 +13,5 @@ import java.util.Map;
  *                        the Map will contain <code>userId -> 123</code>
  * @param <T> The {@link HttpRoute} type
  */
-public record MatchingRoute<T>(HttpRoute<T> httpRoute, Map<String, String> parameterValues) {
+public record MatchingRoute<T extends HttpRoute>(T httpRoute, Map<String, String> parameterValues) {
 }

@@ -8,26 +8,26 @@ import java.util.Map;
 
 public class RouterMocks {
 
-    public static List<HttpRoute<String>> endpointsTest() {
+    public static List<MockHttpRoute> endpointsTest() {
         return endpointsTest;
     }
 
-    private static final List<HttpRoute<String>> endpointsTest = List.of(
-            new HttpRoute<String>("1", "GET", "/test/chose", "/test/chose"),
-            new HttpRoute<String>("2", "GET", "/test/bidule/chose", "/test/bidule/chose"),
-            new HttpRoute<String>("3", "GET", "/test/{truc}/{bidule}", "/test/{truc}/{bidule}"),
-            new HttpRoute<String>("4", "GET", "/test/{truc}/machin", "/test/{truc}/machin"),
-            new HttpRoute<String>("5", "GET", "/test/{truc}/machin/{chose}", "/test/{chose}/machin/{truc}"),
-            new HttpRoute<String>("6", "GET", "/test/{truc}/machin/truc", "/test/{truc}/machin/truc"),
-            new HttpRoute<String>("7", "PUT", "/test/chouette", "/test/chouette-found"),
-            new HttpRoute<String>("8", "PUT", "/test/{truc}", "/test/{truc}"),
-            new HttpRoute<String>("9", "PUT", "/test/machinchouette", "/test/machinchouette-found")
+    private static final List<MockHttpRoute> endpointsTest = List.of(
+            new MockHttpRoute("1", "GET", "/test/chose", "/test/chose"),
+            new MockHttpRoute("2", "GET", "/test/bidule/chose", "/test/bidule/chose"),
+            new MockHttpRoute("3", "GET", "/test/{truc}/{bidule}", "/test/{truc}/{bidule}"),
+            new MockHttpRoute("4", "GET", "/test/{truc}/machin", "/test/{truc}/machin"),
+            new MockHttpRoute("5", "GET", "/test/{truc}/machin/{chose}", "/test/{chose}/machin/{truc}"),
+            new MockHttpRoute("6", "GET", "/test/{truc}/machin/truc", "/test/{truc}/machin/truc"),
+            new MockHttpRoute("7", "PUT", "/test/chouette", "/test/chouette-found"),
+            new MockHttpRoute("8", "PUT", "/test/{truc}", "/test/{truc}"),
+            new MockHttpRoute("9", "PUT", "/test/machinchouette", "/test/machinchouette-found")
     );
 
-    public static IndexedRoutes<String> choseSegment = new IndexedRoutes<String>(
+    public static IndexedRoutes<MockHttpRoute> choseSegment = new IndexedRoutes<>(
         new IndexRouteLeaf<>(
             Map.of(),
-            new HttpRoute<String>("1", "GET", "/test/chose", "/test/chose")
+            new MockHttpRoute("1", "GET", "/test/chose", "/test/chose")
         ),
             1L << 62 | 1L << 61 | 1L << 60,
             2,
@@ -35,10 +35,10 @@ public class RouterMocks {
             null
     );
 
-    public static IndexedRoutes<String> testBiduleChoseSegment = new IndexedRoutes<String>(
-            new IndexRouteLeaf<String>(
+    public static IndexedRoutes<MockHttpRoute> testBiduleChoseSegment = new IndexedRoutes<>(
+            new IndexRouteLeaf<>(
                     Map.of(),
-                    new HttpRoute<String>("2", "GET", "/test/bidule/chose", "/test/bidule/chose")
+                    new MockHttpRoute("2", "GET", "/test/bidule/chose", "/test/bidule/chose")
             ),
             1L << 62 | 1L << 61 | 1L << 60 | 1L << 59,
             3,
@@ -46,10 +46,10 @@ public class RouterMocks {
             null
     );
 
-    public static IndexedRoutes<String> testTrucBidulePattern = new IndexedRoutes<String>(
-            new IndexRouteLeaf<String>(
+    public static IndexedRoutes<MockHttpRoute>testTrucBidulePattern = new IndexedRoutes<>(
+            new IndexRouteLeaf<>(
                     Map.of("truc", 2, "bidule",3),
-                    new HttpRoute<String>("3", "GET", "/test/{truc}/{bidule}", "/test/{truc}/{bidule}")
+                    new MockHttpRoute("3", "GET", "/test/{truc}/{bidule}", "/test/{truc}/{bidule}")
             ),
             1L << 62 | 1L << 61,
             3,
@@ -57,30 +57,30 @@ public class RouterMocks {
             null
     );
 
-    public static IndexedRoutes<String> testTrucMachinTrucSegment = new IndexedRoutes<String>(
-            new IndexRouteLeaf<String>(
+    public static IndexedRoutes<MockHttpRoute>testTrucMachinTrucSegment = new IndexedRoutes<>(
+            new IndexRouteLeaf<>(
                     Map.of("truc", 2),
-                    new HttpRoute<String>("6", "GET", "/test/{truc}/machin/truc", "/test/{truc}/machin/truc")
+                    new MockHttpRoute("6", "GET", "/test/{truc}/machin/truc", "/test/{truc}/machin/truc")
             ),
             1L << 62 | 1L << 61 | 1L << 59 | 1L << 58,
             4,
             Map.of(),
             null
     );
-    public static IndexedRoutes<String> testTrucMachinChosePattern = new IndexedRoutes<String>(
-            new IndexRouteLeaf<String>(
+    public static IndexedRoutes<MockHttpRoute>testTrucMachinChosePattern = new IndexedRoutes<>(
+            new IndexRouteLeaf<>(
                     Map.of("truc", 2, "chose", 4),
-                    new HttpRoute<String>("5", "GET", "/test/{truc}/machin/{chose}", "/test/{chose}/machin/{truc}")
+                    new MockHttpRoute("5", "GET", "/test/{truc}/machin/{chose}", "/test/{chose}/machin/{truc}")
             ),
             1L << 62 | 1L << 61 | 1L << 59,
             4,
             Map.of(),
             null
     );
-    public static IndexedRoutes<String> testTrucMachinSegment = new IndexedRoutes<String>(
-            new IndexRouteLeaf<String>(
+    public static IndexedRoutes<MockHttpRoute>testTrucMachinSegment = new IndexedRoutes<>(
+            new IndexRouteLeaf<>(
                     Map.of("truc", 2),
-                    new HttpRoute<String>("4", "GET", "/test/{truc}/machin", "/test/{truc}/machin")
+                    new MockHttpRoute("4", "GET", "/test/{truc}/machin", "/test/{truc}/machin")
             ),
             1L << 62 | 1L << 61 | 1L << 59,
             3,
@@ -88,7 +88,7 @@ public class RouterMocks {
             testTrucMachinChosePattern
     );
 
-    public static IndexedRoutes<String> biduleSegments = new IndexedRoutes<String>(
+    public static IndexedRoutes<MockHttpRoute>biduleSegments = new IndexedRoutes<>(
             null,
             1L << 62 | 1L << 61 | 1L << 60,
             2,
@@ -96,7 +96,7 @@ public class RouterMocks {
             null
     );
 
-    public static IndexedRoutes<String> testPattern = new IndexedRoutes<String>(
+    public static IndexedRoutes<MockHttpRoute>testPattern = new IndexedRoutes<>(
             null,
             1L << 62 | 1L << 61,
             2,
@@ -104,7 +104,7 @@ public class RouterMocks {
             testTrucBidulePattern
     );
 
-    public static IndexedRoutes<String> testSegments = new IndexedRoutes<String>(
+    public static IndexedRoutes<MockHttpRoute>testSegments = new IndexedRoutes<>(
             null,
             1L << 62 | 1L << 61,
             1,
@@ -112,10 +112,10 @@ public class RouterMocks {
             testPattern
     );
 
-    public static IndexedRoutes<String> putTestPattern = new IndexedRoutes<String>(
-             new IndexRouteLeaf<String>(
+    public static IndexedRoutes<MockHttpRoute>putTestPattern = new IndexedRoutes<>(
+             new IndexRouteLeaf<>(
                     Map.of("truc", 2),
-                    new HttpRoute<String>("8", "PUT", "/test/{truc}", "/test/{truc}")
+                    new MockHttpRoute("8", "PUT", "/test/{truc}", "/test/{truc}")
             ),
             1L << 62 | 1L << 61,
             2,
@@ -123,10 +123,10 @@ public class RouterMocks {
             null
     );
 
-    public static IndexedRoutes<String> putChouetteSegment = new IndexedRoutes<String>(
-            new IndexRouteLeaf<String>(
+    public static IndexedRoutes<MockHttpRoute>putChouetteSegment = new IndexedRoutes<>(
+            new IndexRouteLeaf<>(
                     Map.of(),
-                    new HttpRoute<String>("7", "PUT", "/test/chouette", "/test/chouette-found")
+                    new MockHttpRoute("7", "PUT", "/test/chouette", "/test/chouette-found")
             ),
             1L << 62 | 1L << 61 | 1L << 60,
             2,
@@ -134,10 +134,10 @@ public class RouterMocks {
             null
     );
 
-    public static IndexedRoutes<String> putMachinChouetteSegment = new IndexedRoutes<String>(
-            new IndexRouteLeaf<String>(
+    public static IndexedRoutes<MockHttpRoute>putMachinChouetteSegment = new IndexedRoutes<>(
+            new IndexRouteLeaf<>(
                     Map.of(),
-                    new HttpRoute<String>("9", "PUT", "/test/machinchouette", "/test/machinchouette-found")
+                    new MockHttpRoute("9", "PUT", "/test/machinchouette", "/test/machinchouette-found")
             ),
             1L << 62 | 1L << 61 | 1L << 60,
             2,
@@ -145,7 +145,7 @@ public class RouterMocks {
             null
     );
 
-    public static IndexedRoutes<String> putTestSegment = new IndexedRoutes<String>(
+    public static IndexedRoutes<MockHttpRoute>putTestSegment = new IndexedRoutes<>(
             null,
             1L << 62 | 1L << 61,
             1,
@@ -153,15 +153,15 @@ public class RouterMocks {
             putTestPattern
     );
 
-    public static Map<String, IndexedRoutes<String>> indexedRoutesByMethod = Map.of(
-            "GET", new IndexedRoutes<String>(
+    public static Map<String, IndexedRoutes<MockHttpRoute>> indexedRoutesByMethod = Map.of(
+            "GET", new IndexedRoutes<>(
                     null,
                     1L << 62,
                     0,
                     Map.of("test", testSegments),
                     null
             ),
-            "PUT", new IndexedRoutes<String>(
+            "PUT", new IndexedRoutes<>(
                     null,
                     1L << 62,
                     0,

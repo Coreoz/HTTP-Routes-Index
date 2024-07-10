@@ -1,5 +1,6 @@
 package com.coreoz.http.routes.router.index;
 
+import com.coreoz.http.routes.router.HttpRoute;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -13,7 +14,7 @@ import java.util.Map;
  */
 @AllArgsConstructor
 @Data
-public class IndexedRoutes<T> {
+public class IndexedRoutes<T extends HttpRoute> {
     private IndexRouteLeaf<T> lastRoute;
     private long rating;
     private int depth;

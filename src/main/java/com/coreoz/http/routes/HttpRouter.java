@@ -1,10 +1,10 @@
 package com.coreoz.http.routes;
 
 import com.coreoz.http.routes.router.HttpRoute;
-import com.coreoz.http.routes.router.search.SearchRouteEngine;
-import com.coreoz.http.routes.router.index.SearchRouteIndexer;
 import com.coreoz.http.routes.router.index.IndexedRoutes;
+import com.coreoz.http.routes.router.index.SearchRouteIndexer;
 import com.coreoz.http.routes.router.search.RawMatchingRoute;
+import com.coreoz.http.routes.router.search.SearchRouteEngine;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -18,11 +18,13 @@ import java.util.Optional;
  * 2. To search for a route for a method and a path using {@link #searchRoute(String, String)}<br>
  * <br>
  * In case of route rewriting, a destination path can be computed using {@link HttpRoutes#computeDestinationRoute(RawMatchingRoute, List)}
+ *
+ * @param <T> The type of {@link HttpRoute} managed by the router. The {@link HttpRoute} can be extracted from a search result, so it can be used to hold custom data.
  */
-public class HttpRouter<T> {
+public class HttpRouter<T extends HttpRoute> {
     private final @NotNull Map<String, IndexedRoutes<T>> routerIndex;
 
-    public HttpRouter(@NotNull Iterable<HttpRoute<T>> routes) {
+    public HttpRouter(@NotNull Iterable<T> routes) {
         this.routerIndex = SearchRouteIndexer.indexRoutes(routes);
     }
 
@@ -38,7 +40,7 @@ public class HttpRouter<T> {
      * @return The route passed as an argument if it is the new route was added. If there were an already existing route
      * for the specified path, then the new route is NOT added and the existing route is returned.
      */
-    public @NotNull HttpRoute<T> addRoute(@NotNull HttpRoute<T> route) {
+    public @NotNull T addRoute(@NotNull T route) {
         return SearchRouteIndexer.addRouteToIndex(routerIndex, route).httpRoute();
     }
 
