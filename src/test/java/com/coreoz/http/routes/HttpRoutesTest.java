@@ -4,7 +4,6 @@ import com.coreoz.http.routes.parsing.ParsedPath;
 import com.coreoz.http.routes.parsing.ParsedRoute;
 import com.coreoz.http.routes.parsing.ParsedSegment;
 import org.assertj.core.api.Assertions;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 import java.util.List;
@@ -80,7 +79,6 @@ public class HttpRoutesTest {
         String basePath = "/seg1/seg2/{arg}";
         ParsedPath parsedPath = HttpRoutes.parsePath(basePath);
         Assertions.assertThat(parsedPath).isNotNull();
-        Assertions.assertThat(parsedPath.originalPath()).isEqualTo(basePath);
         Assertions.assertThat(parsedPath.genericPath()).isEqualTo("/seg1/seg2/{}");
         Assertions.assertThat(parsedPath.segments()).isEqualTo(List.of(
             new ParsedSegment("seg1", false),
@@ -91,11 +89,10 @@ public class HttpRoutesTest {
 
     @Test
     public void parseRoute__verify_that_a_route_is_correctly_parsed() {
-        ParsedRoute<String> parsedRoute = makeParsedRoute();
+        ParsedRoute<MockedHttpRouteDefinition> parsedRoute = RoutesMocks.makeParsedRoute();
         Assertions.assertThat(parsedRoute).isNotNull();
         Assertions.assertThat(parsedRoute.parsedPath()).isNotNull();
-        Assertions.assertThat(parsedRoute.httpMethod()).isEqualTo("GET");
-        Assertions.assertThat(parsedRoute.attachedData()).isEqualTo("attached-data");
+        Assertions.assertThat(parsedRoute.routeDefinition().method()).isEqualTo("GET");
     }
 
     //      * - [] => "/"
@@ -126,10 +123,5 @@ public class HttpRoutesTest {
                 a -> "-" + a
             ))
             .isEqualTo("/test/-arg/other");
-    }
-
-    @NotNull
-    static ParsedRoute<String> makeParsedRoute() {
-        return HttpRoutes.parseRoute("/test/{arg-name}", "GET", "attached-data");
     }
 }

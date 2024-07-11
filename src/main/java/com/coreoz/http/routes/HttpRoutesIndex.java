@@ -1,5 +1,6 @@
 package com.coreoz.http.routes;
 
+import com.coreoz.http.routes.parsing.HttpRouteDefinition;
 import com.coreoz.http.routes.parsing.ParsedPath;
 import com.coreoz.http.routes.parsing.ParsedRoute;
 import org.jetbrains.annotations.NotNull;
@@ -16,9 +17,9 @@ import java.util.stream.Collector;
 /**
  * Route definitions index to verify whether another route definition is present or not in the Index.<br>
  * This is usually used for validation purpose to verify that a route has not already been declared.
- * @param <T> If needed, the type of data that is being attached to a route
+ * @param <T> The custom {@link HttpRouteDefinition} type
  */
-public class HttpRoutesIndex<T> {
+public class HttpRoutesIndex<T extends HttpRouteDefinition> {
     private final Map<String, List<ParsedRoute<T>>> existingRoutes = new HashMap<>();
 
     /**
@@ -69,14 +70,12 @@ public class HttpRoutesIndex<T> {
 
     /**
      * Add a route to the existing routes
-     * @param path The path of the new route
-     * @param httpMethod The HTTP method of the new route: GET, POST, PUT, etc.
-     * @param attachedData Some optional data to be attached to the route, for further processing later
+     * @param route The route to add in the index
      * @return The corresponding {@link ParsedRoute} that has been added if no route existed for the path and http method.
      * If a route already exists, null is returned and the existing route is not changed
      */
-    public @Nullable ParsedRoute<T> addRoute(@NotNull String path, @NotNull String httpMethod, @Nullable T attachedData) {
-        return addRoute(HttpRoutes.parseRoute(path, httpMethod, attachedData));
+    public @Nullable ParsedRoute<T> addRoute(T route) {
+        return addRoute(new ParsedRoute<>(HttpRoutes.parsePath(route.path()), route));
     }
 
     /**
@@ -93,7 +92,7 @@ public class HttpRoutesIndex<T> {
             existingRoutes.put(route.parsedPath().genericPath(), routes);
             return route;
         }
-        if (findRoute(availableRoutes, route.httpMethod()).isPresent()) {
+        if (findRoute(availableRoutes, route.routeDefinition().method()).isPresent()) {
             return null;
         }
         availableRoutes.add(route);
@@ -101,7 +100,7 @@ public class HttpRoutesIndex<T> {
     }
 
     private @NotNull Optional<ParsedRoute<T>> findRoute(@NotNull List<ParsedRoute<T>> availableRoutes, @NotNull String httpMethod) {
-        return availableRoutes.stream().filter(route -> route.httpMethod().equals(httpMethod)).findFirst();
+        return availableRoutes.stream().filter(route -> route.routeDefinition().method().equals(httpMethod)).findFirst();
     }
 
     /**
@@ -109,7 +108,7 @@ public class HttpRoutesIndex<T> {
      * @return The corresponding {@link HttpRoutesIndex}
      * @param <T> The type of the resulted {@link HttpRoutesIndex}
      */
-    public static <T> Collector<ParsedRoute<T>, HttpRoutesIndex<T>, HttpRoutesIndex<T>> collector() {
+    public static <T extends HttpRouteDefinition> Collector<ParsedRoute<T>, HttpRoutesIndex<T>, HttpRoutesIndex<T>> collector() {
         return Collector.of(
             HttpRoutesIndex::new,
             HttpRoutesIndex::addRoute,

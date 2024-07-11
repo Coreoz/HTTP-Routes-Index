@@ -1,14 +1,12 @@
 package com.coreoz.http.routes.parsing;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Represents a route that has been parsed. E.g <code>GET /path/{path-arg}/other-path-segment</code>.
  * @param parsedPath See {@link ParsedPath}
- * @param httpMethod The HTTP method used for the path. E.g. GET, POST, PUT, DELETE, PATCH, etc.
- * @param attachedData Some data that can be added to the route to ease later usage
- * @param <T> The type of {@link #attachedData}
+ * @param routeDefinition The original route definition
+ * @param <T> The type of {@link HttpRouteDefinition} used
  */
-public record ParsedRoute<T>(@NotNull ParsedPath parsedPath, @NotNull String httpMethod, @Nullable T attachedData) {
+public record ParsedRoute<T extends HttpRouteDefinition>(@NotNull ParsedPath parsedPath, @NotNull T routeDefinition) {
 }

@@ -9,7 +9,6 @@ import com.coreoz.http.routes.router.index.IndexRouteLeaf;
 import com.coreoz.http.routes.router.search.MatchingRoute;
 import com.coreoz.http.routes.router.search.RawMatchingRoute;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,22 +23,6 @@ public class HttpRoutes {
     public static final String SEGMENT_SEPARATOR = "/";
 
     /**
-     * Parse a complete route. E.g <code>GET /path/{path-arg}/other-path-segment</code>.
-     * @param path Route path
-     * @param httpMethod Route HTTP method
-     * @param attachedData Some data that can be added to the route to ease later usage
-     * @return An instance of {@link ParsedRoute}. No exception can be raised as long as <code>path</code> and <code>httpMethod</code> are not null
-     * @param <T> The type of <code>attachedData</code>
-     */
-    public static @NotNull <T> ParsedRoute<T> parseRoute(@NotNull String path, @NotNull String httpMethod, @Nullable T attachedData) {
-        return new ParsedRoute<>(
-            parsePath(path),
-            httpMethod,
-            attachedData
-        );
-    }
-
-    /**
      * Parse a path. E.g <code>/path/{path-arg}/other-path-segment</code>.
      * @param path A route path
      * @return An instance of {@link ParsedPath}. No exception can be raised as long as <code>path</code> is not null
@@ -48,8 +31,7 @@ public class HttpRoutes {
         List<ParsedSegment> parsedPathSegments = parsePathAsSegments(path);
         return new ParsedPath(
             parsedPathSegments,
-            serializeParsedPath(parsedPathSegments, patternName -> "{}"),
-            path
+            serializeParsedPath(parsedPathSegments, patternName -> "{}")
         );
     }
 
