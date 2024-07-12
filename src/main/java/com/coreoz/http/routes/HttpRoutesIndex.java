@@ -75,7 +75,7 @@ public class HttpRoutesIndex<T extends HttpRouteDefinition> {
      * If a route already exists, null is returned and the existing route is not changed
      */
     public @Nullable ParsedRoute<T> addRoute(T route) {
-        return addRoute(new ParsedRoute<>(HttpRoutes.parsePath(route.path()), route));
+        return addRoute(HttpRoutes.parseRoute(route));
     }
 
     /**

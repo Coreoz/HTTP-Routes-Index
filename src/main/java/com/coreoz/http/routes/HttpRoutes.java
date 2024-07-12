@@ -1,6 +1,7 @@
 package com.coreoz.http.routes;
 
 import com.coreoz.http.routes.parsing.DestinationRoute;
+import com.coreoz.http.routes.parsing.HttpRouteDefinition;
 import com.coreoz.http.routes.parsing.ParsedPath;
 import com.coreoz.http.routes.parsing.ParsedRoute;
 import com.coreoz.http.routes.parsing.ParsedSegment;
@@ -21,6 +22,19 @@ import java.util.stream.Collectors;
  */
 public class HttpRoutes {
     public static final String SEGMENT_SEPARATOR = "/";
+
+    /**
+     * Parse a complete route. E.g <code>GET /path/{path-arg}/other-path-segment</code>.
+     * @param route Route definition
+     * @return An instance of {@link ParsedRoute}. No exception can be raised as long as <code>path</code> and <code>httpMethod</code> are not null
+     * @param <T> The type of <code>attachedData</code>
+     */
+    public static @NotNull <T extends HttpRouteDefinition> ParsedRoute<T> parseRoute(@NotNull T route) {
+        return new ParsedRoute<>(
+            parsePath(route.path()),
+            route
+        );
+    }
 
     /**
      * Parse a path. E.g <code>/path/{path-arg}/other-path-segment</code>.

@@ -6,7 +6,6 @@ import org.jetbrains.annotations.NotNull;
 public class RoutesMocks {
     @NotNull
     static ParsedRoute<MockedHttpRouteDefinition> makeParsedRoute() {
-        MockedHttpRouteDefinition route = new MockedHttpRouteDefinition("GET", "/test/{arg-name}");
-        return new ParsedRoute<>(HttpRoutes.parsePath(route.path()), route);
+        return HttpRoutes.parseRoute(new MockedHttpRouteDefinition("GET", "/test/{arg-name}"));
     }
 }
